@@ -4,7 +4,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-const myDinos = [
+let myDinos = [
   {
     id: 1,
     name: 'Aardonyx',
@@ -19,7 +19,7 @@ const myDinos = [
   },
   {
     id: 3,
-    name: 'Fabrosaurus',
+    name: 'Fabro-saurus',
     weight: '10-20 lbs',
     habitats: 'Woodlands'
   },
@@ -42,13 +42,37 @@ app.get('/api/dinos', function(req, res) {
 })
 
 app.get('/api/dinos/:id', (req, res) => {
-  const oneDino = myDinos.find(dino => dino.id === parseInt(req.params.id))
+  let oneDino = myDinos.find(dino => dino.id === parseInt(req.params.id))
   res.json(oneDino)
 })
 
 app.get('/api/dinos/:id/habitats', (req, res) => {
-  const oneDino = myDinos.find(dino => dino.id === parseInt(req.params.id))
+  let oneDino = myDinos.find(dino => dino.id === parseInt(req.params.id))
   res.json(oneDino.habitats)
+})
+
+app.post('/api/dinos', (req, res) => {
+  let newDino = {
+    id: myDinos.length +1,
+    name: req.body.name,
+    weight: req.body.weight,
+    habitats: req.body.habitats
+  }
+  myDinos.push(newDino)
+  res.json(myDinos)
+
+})
+
+app.put('/api/dinos/:id', (req, res) => {
+  const oneDino = myDinos.find(dino => dino.id === parseInt(req.params.id))
+  oneDino.name = 'Fabrosaurus'
+  res.json(myDinos)
+})
+
+app.delete('/api/dinos/:id', (req, res) => {
+  const dinoID = parseInt(req.params.id)
+  myDinos = myDinos.filter(dino => dino.id !== dinoID)
+  res.json(myDinos)
 })
 
 app.listen(3000, function() {
